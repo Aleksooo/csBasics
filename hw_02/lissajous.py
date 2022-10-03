@@ -3,32 +3,45 @@ import numpy as np
 import matplotlib.pylab as plt
 from matplotlib.animation import FuncAnimation
 
-a = 1
-b = 2
+a = 7
+b = 10
 delta = np.pi / 2
 print(np.gcd(a, b))
-t = np.linspace(0, 2*np.gcd(a, b) * np.pi, 100)
+t_max = 2 * np.pi / np.gcd(a, b)
+dt = 0.01
+frames = np.arange(0, t_max, dt)
+N = frames.size
+print(N)
 
-x_data, y_data = [], []
+t, x_data, y_data = [], [], []
 
-# x = np.sin(a * t + delta)
-# y = np.sin(b * t)
-
-fig, ax = plt.subplots()
-ln, = plt.plot([], [])
+fig, (ax1, ax2, ax3) = plt.subplots(3, 1)
+ln1, = ax1.plot([], [])
+ln2, = ax2.plot([], [])
+ln3, = ax3.plot([], [])
 
 def init():
-    ax.set_xlim(-1, 1)
-    ax.set_ylim(-1, 1)
+    ax1.set_xlim(-1, 1)
+    ax1.set_ylim(-1, 1)
 
-    return ln,
+    ax2.set_xlim(0, t_max)
+    ax2.set_ylim(-1, 1)
+
+    ax3.set_xlim(0, t_max)
+    ax3.set_ylim(-1, 1)
+    return ln1, ln2, ln3,
 
 def update(frame):
     x_data.append(np.sin(a * frame + delta))
     y_data.append(np.sin(b * frame))
-    ln.set_data(x_data, y_data)
+    t.append(frame)
 
-    return ln,
+    ln1.set_data(x_data, y_data)
+    ln2.set_data(t, x_data)
+    ln3.set_data(t, y_data)
 
-ani = FuncAnimation(fig, update, frames=t, init_func=init, blit=True)
+    return ln1, ln1, ln2, ln3,
+
+ani = FuncAnimation(fig, update, frames=frames,
+    init_func=init, blit=True, interval=100, repeat=False)
 plt.show()
