@@ -32,7 +32,7 @@ void natural_series(size_t begin, size_t end, size_t step, bool inverse=false) {
 int main() {
     natural_series<float>(1, 20'000'000, 4'000'000);
     std::cout << "\n";
-    natural_series<floatt>(1, 20'000'000, 4'000'000, true);
+    natural_series<float>(1, 20'000'000, 4'000'000, true);
 
     return 0;
 }
