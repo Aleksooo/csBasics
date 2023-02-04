@@ -1,10 +1,10 @@
 #include <iostream>
 #include <vector>
+#include <cmath>
 
 double const pi = 3.14;
 // Parametr of differential equation
 double const omega2 = 1.0;
-bool const DEBUG = 0;
 
 struct State {
     double x;
@@ -19,7 +19,18 @@ struct State {
     }
 
     State mult() {
-        State t(v, -omega2 * x);
+        State t;
+        if (x >= 1) {
+            t.x = v;
+            t.v = -1 / (x * x);
+        } else if (x <= -1) {
+            t.x = v;
+            t.v = 1 / (x * x);
+        } else {
+            t.x = v;
+            t.v = 0;
+        }
+
         return t;
     }
 
@@ -66,10 +77,13 @@ State operator/(const State& lhs, double val) {
 }
 
 int main(int argc, char** argv) {
-    if (argc != 5) {
+    if (argc != 6) {
         std::cerr << "Wrong amount of parametrs!!!" << std::endl;
         return -1;
     }
+
+    // std::ifstream f("example.json");
+    // json data = json::parse(f);
 
     // Parametr of solver
     double t_left = std::atof(argv[1]);
@@ -77,10 +91,12 @@ int main(int argc, char** argv) {
     size_t N = std::atoi(argv[3]); // Number of points
     double dt = (t_right - t_left) / (N - 1);
     char solver_type = *argv[4];
+    bool DEBUG = std::atoi(argv[5]);
 
     std::cout << "t_left: " << t_left << "\n";
     std::cout << "t_right: " << t_right << "\n";
     std::cout << "N: " << N << "\n";
+    std::cout << "DEBUG: " << DEBUG << "\n";
 
     // Initial condition and grid
     State init_state(0.0, 1.0);
